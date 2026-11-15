@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Georgia, serif;
+            background-image: url('contactus.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        .container {
+            max-width: 500px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+        }
+        .container:hover {
+            transform: scale(1.02);
+        }
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+        }
+        .contact-info p {
+            color: #555;
+            font-size: 1.2em;
+            margin: 15px 0;
+        }
+        .contact-info a {
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .contact-info a:hover {
+            color: #0056b3;
+        }
+        .footer {
+            margin-top: 20px;
+            color: #777;
+            font-size: 0.9em;
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Contact Us</h1>
+
+        <p><strong>Have a question? Need help? Feel free to reach out to us.</strong></p>
+
+        <div class="contact-info">
+            <p><strong>Email:</strong> <a href="mailto:bookhouseproject6@gmail.com">bookhouseproject6@gmail.com</a></p>
+            <p><strong>Phone:</strong> <a href="tel:+1800000789">+1 (800) 000-789</a></p>
+            <p><strong>Address:</strong> HUBBALLI</p>
+        </div>
+
+        <div class="footer">
+            <p>We look forward to hearing from you!</p>
+        </div>
+    </div>
+
+</body>
+</html>

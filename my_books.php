@@ -1,0 +1,234 @@
+<?php
+// Start session
+session_start();
+include("user_check.php");
+
+// Database connection
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db = "book_house";
+
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch books from database
+$sql = "SELECT b_id, name, author, per_day_price, status, location, uid, cover FROM book";
+$result = $conn->query($sql);
+
+// Assuming user ID is stored in session
+$user_id = $_SESSION['uid'] ; // Default user ID
+
+// Fetch user details
+$sql=mysqli_query($conn,"select *from  book where uid='$user_id'");
+
+// Use default profile picture if none exists
+$profile_picture = !empty($user['profile_picture']) ? $user['profile_picture'] : 'default-profile.jpg';
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookhouse Dashboard</title>
+    <link rel="stylesheet" href="navigation.css" type="text/css">
+    <style>
+        body {
+            font-family: "Georgia", sans-serif;
+            background-color: #f9fafb;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1f2937;
+            text-align: center;
+        }
+        /* Profile Section */
+        .profile {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background-color: #f3f4f6;
+            border-radius: 12px;
+        }
+        .profile a {
+            text-decoration: none;
+        }
+        .profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+        .profile h2 {
+            font-size: 20px;
+            margin: 0;
+            color: #1f2937;
+        }
+        .profile p {
+            margin: 4px 0;
+            color: #4b5563;
+        }
+        /* Buttons */
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #4f46e5;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #3730a3;
+        }
+        .rent-btn {
+            background-color: #10b981;
+        }
+        .rent-btn:hover {
+            background-color: #059669;
+        }
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+        }
+        th {
+            background-color: #f3f4f6;
+            font-size: 16px;
+            color: #1f2937;
+        }
+        td {
+            font-size: 14px;
+            color: #4b5563;
+        }
+        td img {
+            width: 50px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 8px;
+        } 
+    </style>
+</head>
+<body>
+<div class="nav">
+        <a href="bookdashboard.php">Home</a>
+        <a href="addbook.php">Add books</a>
+        <a href="my_orders.php">Orders</a>
+        <a href="userlogin.php">Logout</a>
+    </div>
+
+    <div class="container">
+        <!-- Profile Section (Clickable Image) -->
+        <div class="profile">
+            <a href="user_profile.php?user_id=<?php echo $user_id; ?>">
+                <img src="<?php echo $profile_picture; ?>" alt="Profile Picture">
+            </a>
+            <div>
+                <h2><?php echo $email=$_SESSION['uid']?></h2>
+                <p>Librarian | Book Enthusiast</p>
+            </div>
+        </div>
+
+        <h1>Bookhouse Dashboard</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+    <button onclick="window.location.href='addbook.php'">Add Book</button>
+   
+    </div>
+    <div>
+        <button class="btn btn-info" onclick="location.href='my_books.php'">My Books</button>
+        <button class="btn btn-warning" onclick="location.href='my_orders.php'">My Orders</button>
+    </div>
+</div>
+
+        <input type="text" id="searchInput" oninput="searchBooks()" placeholder="Search books...">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Author</th>
+                    <th>Per Day Price</th>
+                    <th>Status</th>
+                    <th>Location</th>
+                    <th>Cover</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="bookTable">
+                <?php
+                if ($result=mysqli_num_rows($sql)>0) {
+                    while ($row =mysqli_fetch_assoc($sql)) {
+                        echo "<tr>
+                                <td>{$row['b_id']}</td>
+                                <td>{$row['name']}</td>
+                                <td>{$row['author']}</td>
+                                <td>{$row['per_day_price']}</td>
+                                <td>{$row['status']}</td>
+                                <td>{$row['location']}</td>
+                                <td><img src='uploads/{$row['cover']}' alt='Book Cover'></td>
+                                <td><button onclick=\"edit({$row['b_id']})\" class='rent-btn'>Edit</button></td>
+                                <td><button onclick=\"del({$row['b_id']})\" class='rent-btn'>Delete</button></td>
+                              </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='9'>No books found</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function searchBooks() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#bookTable tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(input));
+                row.style.display = match ? '' : 'none';
+            });
+        }
+
+        function rentBook(bookId) {
+            window.location.href = "rentbook.php?book_id=" + bookId;
+        }
+        function del(bookId) {
+            window.location.href = "delete_book.php?book_id=" + bookId;
+        }
+        function edit(bookId) {
+            window.location.href = "edit_book.php?book_id=" + bookId;
+        }
+    </script>
+
+</body>
+</html>
+
+<?php $conn->close(); ?>
