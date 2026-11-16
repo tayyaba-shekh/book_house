@@ -11,7 +11,7 @@ HTML, CSS, JavaScript, PHP, MySQL (XAMPP)
 - Rent a book and pay
 - Return a book (Rs. 10 penalty per late day)
 - Rented books show "Rented" with the date they are free again
-- Admin login: view users, books and payments, block or unblock users
+- Admin login: view users, books and payments, block(approve) or unblock(disapprove) users
 
 ## How to run
 1. Install XAMPP and start Apache and MySQL.
@@ -20,5 +20,5 @@ HTML, CSS, JavaScript, PHP, MySQL (XAMPP)
 4. Open http://localhost/book_house/index.html
 
 ## Admin login (demo)
-Email: admin@gmail.com
-Password: admin123
+Email: admin9158@gmail.com
+Password: 874890
